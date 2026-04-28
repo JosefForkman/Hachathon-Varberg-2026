@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { getStoredEmail, setStoredEmail, isValidEmail } from '../utils/storage.js'
+import { getStoredEmail, setStoredEmail, isValidEmail } from './utils/storage.js'
 
 const COPY = {
   premium: {
@@ -32,7 +32,6 @@ export default function EmailGate({ open, reason, onClose }) {
     }
   }, [open])
 
-  // Close on Escape
   useEffect(() => {
     if (!open) return
     function onKey(e) { if (e.key === 'Escape') onClose() }
@@ -52,7 +51,6 @@ export default function EmailGate({ open, reason, onClose }) {
     }
     setStoredEmail(email.trim())
     setDone(true)
-    // Auto-close after a moment
     setTimeout(() => onClose(), 1600)
   }
 

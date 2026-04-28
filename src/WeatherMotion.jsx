@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
 import Lottie from 'lottie-react'
-import { fetchHallandForecast, symbolToLottie, symbolToLabel } from '../services/smhi.js'
+import { fetchHallandForecast, symbolToLottie, symbolToLabel } from './services/smhi.js'
 
-// Emoji fallback when Lottie file is missing
 const EMOJI = {
   clear: '☀️',
   'partly-cloudy': '⛅',

@@ -2,8 +2,8 @@ import { useEffect, useMemo, useState } from 'react'
 import MapView from './MapView.jsx'
 import ParksSidebar from './ParksSidebar.jsx'
 import ParkDetail from './ParkDetail.jsx'
-import { fetchHallandForecast } from '../services/smhi.js'
-import { classifyType } from '../services/score.js'
+import { fetchHallandForecast } from './services/smhi.js'
+import { classifyType } from './services/score.js'
 
 // Try to read a "name" from common GeoJSON property naming conventions.
 function readName(props) {
@@ -42,7 +42,6 @@ function readAreaKm2(props) {
   return null
 }
 
-// Cheap centroid of a (Multi)Polygon — average of all coordinate pairs.
 function centroidOf(geometry) {
   if (!geometry) return null
   let sumLon = 0, sumLat = 0, n = 0
@@ -61,11 +60,10 @@ export default function MapBrowser({ onPremiumClick }) {
   const [features, setFeatures] = useState([])
   const [loadError, setLoadError] = useState(null)
   const [selectedId, setSelectedId] = useState(null)
-  const [filter, setFilter] = useState('all') // all | park | reserve | marine
+  const [filter, setFilter] = useState('all')
   const [query, setQuery] = useState('')
   const [weather, setWeather] = useState(null)
 
-  // Load GeoJSON
   useEffect(() => {
     fetch('/data/halland_skyddade_omraden.geojson')
       .then((r) => {
@@ -100,12 +98,10 @@ export default function MapBrowser({ onPremiumClick }) {
       })
   }, [])
 
-  // Fetch SMHI weather for Halland (used in score calc)
   useEffect(() => {
     fetchHallandForecast().then(setWeather).catch(() => {})
   }, [])
 
-  // Filter + search
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
     return features.filter((f) => {

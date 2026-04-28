@@ -1,13 +1,12 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo } from 'react'
 import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet'
 import L from 'leaflet'
-import { computeScore, scoreColor } from '../services/score.js'
+import 'leaflet/dist/leaflet.css'
+import { computeScore, scoreColor } from './services/score.js'
 
-// Halland bounding box (approx)
 const HALLAND_CENTER = [56.85, 12.85]
 const HALLAND_ZOOM = 9
 
-// Auto-fit bounds when features load
 function FitBounds({ features }) {
   const map = useMap()
   useEffect(() => {
@@ -24,7 +23,6 @@ function FitBounds({ features }) {
   return null
 }
 
-// Pan to selected feature
 function PanToSelected({ selected }) {
   const map = useMap()
   useEffect(() => {
@@ -37,14 +35,12 @@ function PanToSelected({ selected }) {
 }
 
 export default function MapView({ features, selected, onSelect, loadError }) {
-  // Pre-compute scores so polygon colors stay stable.
   const scoreById = useMemo(() => {
     const m = new Map()
     for (const f of features) m.set(f.id, computeScore(f, null))
     return m
   }, [features])
 
-  // Style function — color by score, brighten when selected.
   const styleFor = (feature, id) => {
     const s = scoreById.get(id) || { total: 60 }
     const isSelected = selected?.id === id
