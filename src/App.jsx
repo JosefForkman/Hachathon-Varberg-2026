@@ -1,12 +1,13 @@
 import { useState } from 'react'
-import Header from './components/Header.jsx'
-import FloatingDecorations from './components/FloatingDecorations.jsx'
-import Hero from './components/Hero.jsx'
-import CTASection from './components/CTASection.jsx'
-import TrustBar from './components/TrustBar.jsx'
-import Features from './components/Features.jsx'
-import Footer from './components/Footer.jsx'
-import EmailGate from './components/EmailGate.jsx'
+import { createBrowserRouter, RouterProvider } from 'react-router'
+// import Header from './components/Header.jsx'
+// import FloatingDecorations from './components/FloatingDecorations.jsx'
+// import Hero from './components/Hero.jsx'
+// import CTASection from './components/CTASection.jsx'
+// import TrustBar from './components/TrustBar.jsx'
+// import Features from './components/Features.jsx'
+// import Footer from './components/Footer.jsx'
+// import EmailGate from './components/EmailGate.jsx'
 
 export default function App() {
   const [gateOpen, setGateOpen] = useState(false)
@@ -16,6 +17,17 @@ export default function App() {
     setGateReason(reason)
     setGateOpen(true)
   }
+
+  const router = createBrowserRouter([
+    {
+      path: '/',
+      element: <h1>Home</h1>
+    },
+    {
+      path: '/about',
+      element: <h1>About</h1>
+    }
+  ]);
 
   return (
     <>
