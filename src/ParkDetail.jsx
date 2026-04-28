@@ -1,68 +1,71 @@
-const FILTERS = [
-  { key: 'all',     label: 'All' },
-  { key: 'park',    label: 'Park' },
-  { key: 'reserve', label: 'Reserve' },
-  { key: 'marine',  label: 'Marine' },
-]
+import { useMemo } from 'react'
+import { computeScore } from './services/score.js'
 
-export default function ParksSidebar({
-  features,
-  selectedId,
-  onSelect,
-  filter,
-  onFilterChange,
-  query,
-  onQueryChange,
-}) {
+export default function ParkDetail({ area, weather, onPremiumClick }) {
+  const score = useMemo(
+    () => (area ? computeScore(area, weather) : null),
+    [area, weather]
+  )
+
+  if (!area) {
+    return (
+      <aside className="detail">
+        <div style={{ color: 'var(--text-muted)', fontSize: 12 }}>
+          Select an area to see details.
+        </div>
+      </aside>
+    )
+  }
+
   return (
-    <aside className="parks">
-      <input
-        className="parks__search"
-        type="search"
-        placeholder="Search areas…"
-        value={query}
-        onChange={(e) => onQueryChange(e.target.value)}
-      />
-
-      <div className="parks__filters" role="tablist">
-        {FILTERS.map((f) => (
-          <button
-            key={f.key}
-            className={`parks__filter ${filter === f.key ? 'parks__filter--active' : ''}`}
-            onClick={() => onFilterChange(f.key)}
-          >
-            {f.label}
-          </button>
-        ))}
+    <aside className="detail">
+      <span className={`detail__type park-card__type--${area.typeKey}`}>
+        {area.typeLabel}
+      </span>
+      <div className="detail__name">{area.name}</div>
+      <div className="detail__sub">
+        {area.kommun || 'Halland'}
+        {area.established ? ` · Established ${String(area.established).slice(0, 4)}` : ''}
       </div>
 
-      <div className="parks__list">
-        {features.length === 0 && (
-          <div className="park-card" style={{ cursor: 'default', textAlign: 'center', color: 'var(--text-muted)' }}>
-            No matches
+      <div className="detail__stats">
+        <div className="detail__stat">
+          <div className="detail__stat-label">Area</div>
+          <div className="detail__stat-value">
+            {area.area ? formatArea(area.area) : '—'}
           </div>
-        )}
-        {features.slice(0, 50).map((f) => {
-          const active = f.id === selectedId
-          return (
-            <button
-              key={f.id}
-              className={`park-card ${active ? 'park-card--active' : ''}`}
-              onClick={() => onSelect(f.id)}
-            >
-              <span className={`park-card__type park-card__type--${f.typeKey}`}>
-                {f.typeLabel}
-              </span>
-              <div className="park-card__name">{f.name}</div>
-              <div className="park-card__meta">
-                {f.kommun ? `${f.kommun} · ` : ''}
-                {f.area ? `${formatArea(f.area)}` : ''}
-              </div>
-            </button>
-          )
-        })}
+        </div>
+        <div className="detail__stat">
+          <div className="detail__stat-label">Score</div>
+          <div className="detail__stat-value">{score?.total ?? '—'}</div>
+        </div>
       </div>
+
+      <div className="detail__bars">
+        <Bar label="Biodiversity" value={score?.biodiversity} />
+        <Bar label="Climate resilience" value={score?.climate} />
+        <Bar label="Ecosystem health" value={score?.ecosystem} />
+      </div>
+
+      <button className="detail__premium" onClick={onPremiumClick}>
+        🔒 Unlock full report (PDF · CSV)
+      </button>
     </aside>
+  )
+}
+
+function Bar({ label, value }) {
+  const v = Number.isFinite(value) ? value : 0
+  return (
+    <div className="detail__bar-row">
+      <div className="detail__bar-label">
+        <span>{label}</span>
+        <span className="detail__bar-value">{v}</span>
+      </div>
+      <div className="detail__bar-track">
+        <div className="detail__bar-fill" style={{ width: `${v}%` }} />
+      </div>
+    </div>
   )
 }
 
