@@ -5,8 +5,8 @@ export default function Header() {
     <header className="header">
       <div className="header__inner">
         <a href="#" className="header__brand">
-          <span className="header__logo" aria-hidden>S</span>
-          <span>Sweden Atlas</span>
+           <img src="/logo.png" alt="" className="header__logo-img" />
+          <span>S-Halland</span>
         </a>
         <nav className="header__nav" aria-label="Main">
           <a href="#features">Features</a>

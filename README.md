@@ -1,16 +1,55 @@
-# React + Vite
+# S-Halland
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+An interactive atlas of Halland's protected areas. Track biodiversity,
+climate resilience, and ecosystem health in one live view — combining
+GeoJSON from Naturvårdsverket with real-time SMHI weather forecasts.
 
-Currently, two official plugins are available:
+> Built for the [Icons Of](https://www.iconsof.se) hackathon · Varberg 2026 ·
+> [LinkedIn](https://www.linkedin.com/company/iconsof)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## What it does
 
-## React Compiler
+- **Interactive map** of every Naturreservat, Naturvårdsområde and
+  marine protection area in Halland (Halland_skyddade_omraden).
+- **Live Sustainability Score** per area: protection class × current
+  climate stress (SMHI 24h forecast) × ecosystem proxies.
+- **Weather Motion**: animated SMHI forecast in the header for
+  Halmstad, updated every 30 minutes.
+- **Free Value First** — full map and scores accessible immediately,
+  no signup. Email is only requested for premium report export.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech
 
-## Expanding the ESLint configuration
+- Vite + React 19
+- react-leaflet + Leaflet · CARTO Dark Matter tiles
+- lottie-react for weather motion
+- SMHI Open Data — Meteorological Forecasts (PMP3g v2)
+- Halland protected areas — Naturvårdsverket GeoJSON
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Run locally
+
+```bash
+npm install
+npm run dev
+```
+
+Open http://localhost:5173.
+
+## Data sources
+
+- **Halland protected areas** · Naturvårdsverket
+- **Weather forecast** · [SMHI Open Data](https://opendata.smhi.se/) (PMP3g v2)
+- _Planned:_ SMHI MetObs (historical observations) and Strång (solar radiation)
+  to enrich the climate-resilience term in the Sustainability Score.
+
+## Built for the Icons Of hackathon
+
+This project is a hackathon entry — useful first, promotional second.
+Light co-branding only:
+
+- Footer: "Built for the Icons Of hackathon" with link
+- LinkedIn share text mentions Icons Of
+- Preview metadata (`og:description`) mentions Icons Of
+
+Visit [iconsof.se](https://www.iconsof.se) ·
+[LinkedIn](https://www.linkedin.com/company/iconsof).

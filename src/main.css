@@ -781,3 +781,26 @@ main { position: relative; }
   text-align: center;
   margin-top: 12px;
 }
+
+/* ========== Brand logo image ========== */
+/* Paste this at the BOTTOM of src/main.css */
+
+.header__logo-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  object-fit: cover;
+  box-shadow: var(--shadow-glow);
+  flex-shrink: 0;
+}
+
+/* Make footer__brand link feel clickable but subtle */
+.footer__brand {
+  color: var(--accent-secondary);
+  font-weight: 500;
+  transition: color var(--t-base);
+}
+.footer__brand:hover {
+  color: var(--accent-primary);
+  text-decoration: underline;
+}
