@@ -19,11 +19,16 @@ export default function App() {
 
   return (
     <>
-      <nav>
-        <a href="/">Home</a>
-        <a href="/about">About</a>
-      </nav>
-    <RouterProvider router={router} />
+      <Header />
+      <main>
+        <FloatingDecorations />
+        <Hero onPremiumClick={() => openGate('premium')} />
+        <CTASection onPremiumClick={() => openGate('premium')} onDemoClick={() => openGate('demo')} />
+        <TrustBar />
+        <Features />
+      </main>
+      <Footer />
+      <EmailGate open={gateOpen} reason={gateReason} onClose={() => setGateOpen(false)} />
     </>
-    )
+  )
 }
