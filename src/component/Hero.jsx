@@ -10,8 +10,8 @@ export default function Hero({ onPremiumClick }) {
                     forecasts
                 </div>
                 <h1 className="hero__title">
-                    Protect what makes
-                    <span className="hero__title-soft">Sweden, Sweden.</span>
+                    Find Your Golden Spot: 
+                    <span className="hero__title-soft">Smart Planning for Halland 2030</span>
                 </h1>
                 <p className="hero__sub">
                     An interactive atlas of Halland's protected areas. Track

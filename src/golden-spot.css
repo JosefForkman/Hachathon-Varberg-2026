@@ -360,3 +360,118 @@
         border-top: 1px solid var(--border);
     }
 }
+
+/* ---------- Sustainability slider ---------- */
+.gs-slider {
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+}
+.gs-slider__head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+.gs-slider__label-l { color: #4ade80; font-weight: 600; }
+.gs-slider__label-r { color: #fbbf24; font-weight: 600; }
+.gs-slider__input {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #4ade80, #fbbf24);
+    outline: none;
+    cursor: pointer;
+}
+.gs-slider__input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #0a1813;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    cursor: pointer;
+    transition: transform 100ms ease;
+}
+.gs-slider__input::-webkit-slider-thumb:hover { transform: scale(1.15); }
+.gs-slider__input::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #0a1813;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    cursor: pointer;
+}
+.gs-slider__weights {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-align: center;
+}
+.gs-slider__weights span {
+    background: rgba(255,255,255,0.04);
+    padding: 4px 2px;
+    border-radius: 4px;
+}
+
+/* ---------- Legal-risk bar sub-line ---------- */
+.gs-bar__sub {
+    margin-top: 4px;
+    font-size: 10px;
+    color: var(--text-muted);
+}
+
+/* ---------- Solar layer legend extras ---------- */
+.gs-map__swatch--solar {
+    background: linear-gradient(90deg, #38bdf8, #fbbf24, #ef4444);
+}
+.gs-map__solar-scale {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+}
+.gs-map__solar-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #38bdf8, #fbbf24, #ef4444);
+}
+.gs-map__solar-ticks {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    color: var(--text-muted);
+    margin-top: 3px;
+}
+.gs-map__legend-row input[type="checkbox"] {
+    accent-color: #4ade80;
+    width: 12px;
+    height: 12px;
+}
+
+/* ---------- Embedded variant (inside .browser chrome) ---------- */
+.gs-browser__body {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    height: 560px;          /* fixed pixel height — works inside MapBrowser */
+    background: #0a1813;
+    overflow: hidden;
+}
+@media (max-width: 900px) {
+    .gs-browser__body {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+    .gs-browser__body .gs-map {
+        height: 380px;
+    }
+}
