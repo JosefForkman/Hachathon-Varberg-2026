@@ -1,13 +1,8 @@
-// Drop-in replacement for MapBrowser when you want the Golden Spot Finder
-// embedded in the Home hero (with the macOS-style browser chrome) instead
-// of as a separate /map route.
-//
-// Usage: in Hero.jsx, replace `<MapBrowser ... />` with `<GoldenSpotBrowser />`.
-
 import { useEffect, useMemo, useState } from "react";
 import GoldenSpotMap from "./component/GoldenSpotMap.jsx";
 import GoldenSpotSidebar from "./component/GoldenSpotSidebar.jsx";
-import { recomputeScore } from "./services/goldenSpot.js";
+import PlacesPanel from "./component/PlacesPanel.jsx";
+import { recomputeScore, evaluateGoldenSpot } from "./services/goldenSpot.js";
 
 export default function GoldenSpotBrowser({ onPremiumClick }) {
     const [protectedAreas, setProtectedAreas] = useState(null);
@@ -28,6 +23,19 @@ export default function GoldenSpotBrowser({ onPremiumClick }) {
         return { ...selectedSpot, result: { ...selectedSpot.result, ...fresh } };
     }, [selectedSpot, priority]);
 
+    // Click on a place card → evaluate its centroid as a Golden Spot
+    async function handlePlaceClick(place) {
+        if (!place.centroid) return;
+        const { lat, lon } = place.centroid;
+        setSelectedSpot({ lat, lon, result: null });
+        try {
+            const result = await evaluateGoldenSpot(lat, lon, protectedAreas);
+            setSelectedSpot({ lat, lon, result });
+        } catch (err) {
+            console.error("[browser] place eval failed:", err);
+        }
+    }
+
     return (
         <div className="browser">
             <div className="browser__chrome">
@@ -38,7 +46,11 @@ export default function GoldenSpotBrowser({ onPremiumClick }) {
                 </div>
                 <div className="browser__url">s-halland.app/explore</div>
             </div>
-            <div className="gs-browser__body">
+            <div className="gs-browser__body gs-browser__body--3col">
+                <PlacesPanel
+                    protectedAreas={protectedAreas}
+                    onPlaceClick={handlePlaceClick}
+                />
                 <GoldenSpotMap
                     protectedAreas={protectedAreas}
                     selectedSpot={reweighted}
