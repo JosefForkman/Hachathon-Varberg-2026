@@ -3,7 +3,7 @@ export default function Footer() {
         <footer className="footer" id="about">
             <div className="footer__line">
                 © {new Date().getFullYear()} S-Halland · Built with open data
-                from Naturvårdsverket &amp; SMHI · Made with 🌿 in Halland
+                from Naturvårdsverket &amp; SMHI · Made with Ctrl Alt Elite 🌿 in Halland
             </div>
             <div className="footer__line">
                 Built for the{" "}

@@ -1,0 +1,718 @@
+/* ============================================================
+   Golden Spot Finder styles — paste into src/main.css (or
+   import this file from src/main.jsx). Uses the same tokens.
+   ============================================================ */
+
+.gs-page {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 24px 24px 48px;
+    color: var(--text-primary);
+}
+.gs-page__head {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+.gs-page__title {
+    font-family: var(--font-display, inherit);
+    font-size: 26px;
+    margin: 0;
+}
+.gs-page__sub {
+    margin: 4px 0 0;
+    color: var(--text-muted);
+    font-size: 13px;
+    max-width: 640px;
+}
+.gs-page__body {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 16px;
+    background: #0a1813;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    height: 70vh;
+    min-height: 540px;
+}
+.gs-page__error {
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    border-radius: var(--radius-sm);
+    color: #fca5a5;
+    font-size: 12px;
+}
+
+/* ---------- Map ---------- */
+.gs-map {
+    position: relative;
+    overflow: hidden;
+}
+.gs-map__leaflet {
+    position: absolute;
+    inset: 0;
+    height: 100%;
+    width: 100%;
+}
+.gs-map__legend {
+    position: absolute;
+    bottom: 14px;
+    left: 14px;
+    background: var(--bg-glass-strong);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+    color: var(--text-primary);
+    font-size: 11px;
+    backdrop-filter: blur(6px);
+    z-index: 500;
+}
+.gs-map__legend-title {
+    color: var(--text-subtle);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+.gs-map__legend-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+}
+.gs-map__legend-hint {
+    margin-top: 8px;
+    color: var(--text-muted);
+    font-size: 10px;
+    font-style: italic;
+}
+.gs-map__swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    flex: none;
+}
+.gs-map__swatch--protected {
+    background: #ef4444;
+}
+.gs-map__swatch--pollution {
+    background: #fb923c;
+}
+.gs-map__swatch--gold {
+    background: #fde047;
+    border: 1px solid #ca8a04;
+}
+
+/* Custom gold marker */
+.gs-pin {
+    position: relative;
+}
+.gs-pin__inner {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #fef08a 0%, #facc15 60%, #ca8a04 100%);
+    box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.25), 0 0 14px rgba(250, 204, 21, 0.6);
+    border: 2px solid #fff;
+}
+
+/* ---------- Sidebar ---------- */
+.gs-side {
+    background: #0d1f18;
+    border-left: 1px solid var(--border);
+    padding: 18px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+.gs-side__h {
+    margin: 8px 0 4px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-subtle);
+}
+.gs-side__coord {
+    font-family: ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+}
+.gs-side__cta {
+    margin-top: auto;
+    width: 100%;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #4ade80, #22c55e);
+    color: #0a1813;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    font-size: 13px;
+    cursor: pointer;
+    transition: transform 120ms ease;
+}
+.gs-side__cta:hover {
+    transform: translateY(-1px);
+}
+.gs-side__cta-sub {
+    text-align: center;
+    color: var(--text-subtle);
+    font-size: 10px;
+}
+.gs-side__reasons {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.gs-side__reasons li {
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    font-size: 12px;
+    line-height: 1.45;
+    color: var(--text-secondary);
+}
+.gs-side__reasons strong {
+    color: var(--text-primary);
+}
+
+/* Empty / hero variant */
+.gs-side--empty .gs-side__hero-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 6px;
+}
+.gs-side--empty .gs-side__hero-sub {
+    font-size: 12px;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+.gs-side__legend {
+    list-style: none;
+    padding: 0;
+    margin: 16px 0 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-size: 12px;
+}
+.gs-side__dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+.gs-side__dot--high {
+    background: #4ade80;
+}
+.gs-side__dot--mid {
+    background: #fbbf24;
+}
+.gs-side__dot--low {
+    background: #f87171;
+}
+.gs-side__dot--forbidden {
+    background: #ef4444;
+}
+
+/* Loading variant */
+.gs-side--loading {
+    align-items: center;
+    text-align: center;
+}
+.gs-spinner {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 3px solid rgba(74, 222, 128, 0.2);
+    border-top-color: #4ade80;
+    animation: gsspin 0.9s linear infinite;
+    margin-top: 24px;
+}
+@keyframes gsspin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+.gs-side__loading-title {
+    font-size: 14px;
+    margin-top: 12px;
+}
+.gs-side__loading-sub {
+    font-family: ui-monospace, monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+}
+.gs-side__loading-list {
+    margin-top: 16px;
+    color: var(--text-subtle);
+    font-size: 11px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+/* Forbidden variant */
+.gs-side--forbidden {
+    text-align: center;
+    align-items: center;
+}
+.gs-side__forbidden-icon {
+    font-size: 40px;
+    margin-top: 8px;
+}
+.gs-side__forbidden-title {
+    color: #ef4444;
+    font-size: 18px;
+    font-weight: 700;
+}
+.gs-side__forbidden-sub {
+    color: var(--text-muted);
+    font-size: 11px;
+}
+.gs-side__forbidden-name {
+    font-size: 14px;
+    color: var(--text-primary);
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    margin: 4px 0 8px;
+}
+
+/* ---------- Donut + bars ---------- */
+.gs-donut {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.gs-donut__svg {
+    width: 140px;
+    height: 140px;
+}
+.gs-donut__track {
+    stroke: rgba(255, 255, 255, 0.08);
+}
+.gs-donut__caption {
+    color: var(--text-subtle);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 4px;
+}
+
+.gs-bar {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.gs-bar__head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-secondary);
+}
+.gs-bar__value {
+    color: var(--text-primary);
+    font-weight: 600;
+    font-family: ui-monospace, monospace;
+}
+.gs-bar__track {
+    height: 5px;
+    background: var(--bg-deep);
+    border-radius: 999px;
+    overflow: hidden;
+}
+.gs-bar__fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4ade80, #22c55e);
+    border-radius: 999px;
+    transition: width 500ms ease;
+}
+.gs-bar__fill--danger {
+    background: linear-gradient(90deg, #fbbf24, #ef4444);
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+    .gs-page__body {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+    .gs-map {
+        height: 420px;
+    }
+    .gs-side {
+        border-left: none;
+        border-top: 1px solid var(--border);
+    }
+}
+
+/* ---------- Sustainability slider ---------- */
+.gs-slider {
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 10px 12px;
+}
+.gs-slider__head {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+}
+.gs-slider__label-l { color: #4ade80; font-weight: 600; }
+.gs-slider__label-r { color: #fbbf24; font-weight: 600; }
+.gs-slider__input {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #4ade80, #fbbf24);
+    outline: none;
+    cursor: pointer;
+}
+.gs-slider__input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #0a1813;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    cursor: pointer;
+    transition: transform 100ms ease;
+}
+.gs-slider__input::-webkit-slider-thumb:hover { transform: scale(1.15); }
+.gs-slider__input::-moz-range-thumb {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #0a1813;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    cursor: pointer;
+}
+.gs-slider__weights {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-align: center;
+}
+.gs-slider__weights span {
+    background: rgba(255,255,255,0.04);
+    padding: 4px 2px;
+    border-radius: 4px;
+}
+
+/* ---------- Legal-risk bar sub-line ---------- */
+.gs-bar__sub {
+    margin-top: 4px;
+    font-size: 10px;
+    color: var(--text-muted);
+}
+
+/* ---------- Solar layer legend extras ---------- */
+.gs-map__swatch--solar {
+    background: linear-gradient(90deg, #38bdf8, #fbbf24, #ef4444);
+}
+.gs-map__solar-scale {
+    margin-top: 6px;
+    padding-top: 6px;
+    border-top: 1px solid var(--border);
+}
+.gs-map__solar-bar {
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #38bdf8, #fbbf24, #ef4444);
+}
+.gs-map__solar-ticks {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    color: var(--text-muted);
+    margin-top: 3px;
+}
+.gs-map__legend-row input[type="checkbox"] {
+    accent-color: #4ade80;
+    width: 12px;
+    height: 12px;
+}
+
+/* ---------- Embedded variant (inside .browser chrome) ---------- */
+.gs-browser__body {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    height: 560px;          /* fixed pixel height — works inside MapBrowser */
+    background: #0a1813;
+    overflow: hidden;
+}
+@media (max-width: 900px) {
+    .gs-browser__body {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+    .gs-browser__body .gs-map {
+        height: 380px;
+    }
+}
+
+/* ---------- 3-column variant: places | map | scoring ---------- */
+.gs-browser__body--3col {
+    grid-template-columns: 240px 1fr 320px;
+}
+@media (max-width: 1100px) {
+    .gs-browser__body--3col {
+        grid-template-columns: 200px 1fr 280px;
+    }
+}
+@media (max-width: 900px) {
+    .gs-browser__body--3col {
+        grid-template-columns: 1fr;
+        height: auto;
+    }
+}
+
+/* ---------- Places panel (left column) ---------- */
+.gs-places {
+    background: #0d1f18;
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    overflow: hidden;
+    min-height: 0;
+}
+.gs-places__search {
+    width: 100%;
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    padding: 8px 10px;
+    font-size: 12px;
+    outline: none;
+}
+.gs-places__search:focus {
+    border-color: var(--accent-primary);
+}
+.gs-places__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+.gs-places__filter {
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    border-radius: var(--radius-pill);
+    padding: 4px 10px;
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 120ms ease;
+}
+.gs-places__filter:hover {
+    border-color: var(--border-strong);
+}
+.gs-places__filter--active {
+    background: var(--accent-primary);
+    color: #0a1813;
+    border-color: var(--accent-primary);
+}
+.gs-places__count {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-subtle);
+}
+.gs-places__list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding-right: 4px;
+}
+.gs-places__empty {
+    padding: 12px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12px;
+}
+.gs-places__card {
+    text-align: left;
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 8px 10px;
+    cursor: pointer;
+    transition: all 120ms ease;
+    color: var(--text-primary);
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+.gs-places__card:hover {
+    border-color: var(--accent-primary);
+    transform: translateX(2px);
+}
+.gs-places__type {
+    display: inline-block;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 2px 6px;
+    border-radius: 3px;
+    align-self: flex-start;
+}
+.gs-places__type--park {
+    background: rgba(74, 222, 128, 0.15);
+    color: #4ade80;
+}
+.gs-places__type--reserve {
+    background: rgba(56, 189, 248, 0.15);
+    color: #38bdf8;
+}
+.gs-places__type--other {
+    background: rgba(251, 191, 36, 0.15);
+    color: #fbbf24;
+}
+.gs-places__name {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.25;
+}
+.gs-places__meta {
+    font-size: 10px;
+    color: var(--text-muted);
+}
+
+/* ---------- Export button (secondary CTA in sidebar) ---------- */
+.gs-side__export {
+    width: 100%;
+    margin-top: 8px;
+    padding: 10px 14px;
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-sm);
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 120ms ease;
+}
+.gs-side__export:hover {
+    border-color: var(--accent-primary);
+    color: var(--accent-primary);
+}
+
+/* ---------- Places panel — richer design (tabs + chips + 2-badge cards) ---------- */
+.gs-places {
+    /* override the simpler version above */
+    padding: 14px;
+    gap: 10px;
+}
+.gs-places__tabs {
+    display: flex;
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    padding: 3px;
+    gap: 2px;
+}
+.gs-places__tab {
+    flex: 1;
+    background: transparent;
+    color: var(--text-muted);
+    border: none;
+    padding: 6px 4px;
+    border-radius: var(--radius-pill);
+    font-size: 10px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 120ms ease;
+    white-space: nowrap;
+}
+.gs-places__tab:hover { color: var(--text-primary); }
+.gs-places__tab--active {
+    background: rgba(74, 222, 128, 0.12);
+    color: #4ade80;
+    border: 1px solid rgba(74, 222, 128, 0.4);
+    padding: 5px 4px;
+}
+
+.gs-places__search-wrap {
+    position: relative;
+}
+.gs-places__search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    color: var(--text-muted);
+    pointer-events: none;
+}
+.gs-places__search {
+    width: 100%;
+    background: var(--bg-deep);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-pill);
+    color: var(--text-primary);
+    padding: 9px 12px 9px 34px;
+    font-size: 12px;
+    outline: none;
+    transition: border-color 120ms ease;
+}
+.gs-places__search:focus {
+    border-color: var(--accent-primary);
+}
+
+/* Card badges — multi-colour by tag */
+.gs-places__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 2px;
+}
+.gs-places__badge {
+    display: inline-block;
+    font-size: 8px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 3px 6px;
+    border-radius: 3px;
+    line-height: 1.1;
+}
+.gs-places__badge--reserve   { background: rgba(74, 222, 128, 0.18);  color: #4ade80; }
+.gs-places__badge--park      { background: rgba(34, 197, 94, 0.20);   color: #86efac; }
+.gs-places__badge--bird      { background: rgba(56, 189, 248, 0.18);  color: #38bdf8; }
+.gs-places__badge--coastal   { background: rgba(167, 139, 250, 0.18); color: #a78bfa; }
+.gs-places__badge--heath     { background: rgba(251, 191, 36, 0.18);  color: #fbbf24; }
+.gs-places__badge--lake      { background: rgba(96, 165, 250, 0.18);  color: #60a5fa; }
+.gs-places__badge--forest    { background: rgba(132, 204, 22, 0.18);  color: #84cc16; }
+.gs-places__badge--n2000     { background: rgba(232, 121, 249, 0.18); color: #e879f9; }
