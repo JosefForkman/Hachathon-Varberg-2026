@@ -55,6 +55,7 @@ export default function EmailGate({ open, reason, onClose }) {
             setError("Please enter a valid email");
             return;
         }
+        localStorage.setItem("userEmail", email.trim());
         setStoredEmail(email.trim());
         setDone(true);
         setTimeout(() => onClose(), 1600);
