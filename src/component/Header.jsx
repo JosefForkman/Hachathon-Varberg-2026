@@ -1,4 +1,4 @@
-import WeatherMotion from "./WeatherMotion.jsx";
+import WeatherMotion from "../WeatherMotion.jsx";
 
 export default function Header() {
     return (

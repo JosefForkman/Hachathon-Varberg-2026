@@ -1,5 +1,5 @@
-import Header from "./Header.jsx";
-import Footer from "./Footer.jsx";
+import Header from "./component/Header.jsx";
+import Footer from "./component/Footer.jsx";
 import { createBrowserRouter } from "react-router";
 import MapView from "./Pages/MapView.jsx";
 import { Home } from "./Pages/home.jsx";

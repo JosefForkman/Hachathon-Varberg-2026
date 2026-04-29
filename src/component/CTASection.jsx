@@ -1,4 +1,4 @@
-import ShareButton from "./ShareButton.jsx";
+import ShareButton from "../ShareButton.jsx";
 
 export default function CTASection({ onPremiumClick, onDemoClick }) {
     return (

@@ -1,8 +1,8 @@
-import FloatingDecorations from "../FloatingDecorations.jsx";
-import Hero from "../Hero.jsx";
-import CTASection from "../CTASection.jsx";
-import TrustBar from "../TrustBar.jsx";
-import Features from "../Features.jsx";
+import FloatingDecorations from "../component/FloatingDecorations.jsx";
+import Hero from "../component/Hero.jsx";
+import CTASection from "../component/CTASection.jsx";
+import TrustBar from "../component/TrustBar.jsx";
+import Features from "../component/Features.jsx";
 import EmailGate from "../Emailgate.jsx";
 import { useState } from "react";
 export function Home() {

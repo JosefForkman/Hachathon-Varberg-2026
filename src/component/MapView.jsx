@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 import { MapContainer, TileLayer, GeoJSON, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { computeScore, scoreColor } from "./services/score.js";
+import { computeScore, scoreColor } from "../services/score.js";
 
 const HALLAND_CENTER = [56.85, 12.85];
 const HALLAND_ZOOM = 9;
@@ -11,14 +11,13 @@ function FitBounds({ features }) {
     const map = useMap();
     useEffect(() => {
         if (!features || features.length === 0) return;
-        try {
-            const layer = L.geoJSON({
-                type: "FeatureCollection",
-                features: features.map((f) => f.raw),
-            });
-            const b = layer.getBounds();
-            if (b.isValid()) map.fitBounds(b, { padding: [20, 20] });
-        } catch {}
+
+        const layer = L.geoJSON({
+            type: "FeatureCollection",
+            features: features.map((f) => f.raw),
+        });
+        const b = layer.getBounds();
+        if (b.isValid()) map.fitBounds(b, { padding: [20, 20] });
     }, [features, map]);
     return null;
 }

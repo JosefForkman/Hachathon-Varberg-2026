@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import MapView from "./MapView.jsx";
+import MapView from "./component/MapView.jsx";
 import ParksSidebar from "./ParksSidebar.jsx";
 import ParkDetail from "./ParkDetail.jsx";
 import { fetchHallandForecast } from "./services/smhi.js";

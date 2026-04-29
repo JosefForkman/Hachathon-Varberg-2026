@@ -1,4 +1,4 @@
-import MapBrowser from "./MapBrowser.jsx";
+import MapBrowser from "../MapBrowser.jsx";
 
 export default function Hero({ onPremiumClick }) {
     return (
