@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import GoldenSpotMap from "../component/GoldenSpotMap.jsx";
 import GoldenSpotSidebar from "../component/GoldenSpotSidebar.jsx";
-import { recomputeScore } from "../services/goldenSpot.js";
+import PlacesPanel from "../component/PlacesPanel.jsx";
+import { evaluateGoldenSpot, recomputeScore } from "../services/goldenSpot.js";
 import {
     getStoredEmail,
     setStoredEmail,
@@ -42,15 +43,30 @@ export default function MapView() {
         return { ...selectedSpot, result: { ...selectedSpot.result, ...fresh } };
     }, [selectedSpot, priority]);
 
+    // Click on a place card → fly to centroid + auto-evaluate
+    async function handlePlaceClick(place) {
+        if (!place.centroid) return;
+        const { lat, lon } = place.centroid;
+        setSelectedSpot({ lat, lon, result: null });
+        try {
+            const result = await evaluateGoldenSpot(lat, lon, protectedAreas);
+            setSelectedSpot({ lat, lon, result });
+        } catch (err) {
+            console.error("[MapView] place eval failed:", err);
+        }
+    }
+
     if (!unlocked) {
-        return (
-            <UnlockGate onUnlock={() => setUnlocked(true)} />
-        );
+        return <UnlockGate onUnlock={() => setUnlocked(true)} />;
     }
 
     return (
         <main className="gs-page gs-page--full">
             <div className="gs-page__body">
+                <PlacesPanel
+                    protectedAreas={protectedAreas}
+                    onPlaceClick={handlePlaceClick}
+                />
                 <GoldenSpotMap
                     protectedAreas={protectedAreas}
                     selectedSpot={reweighted}
@@ -75,7 +91,7 @@ export default function MapView() {
     );
 }
 
-// ---------- Inline email-unlock gate ----------
+// ---------- Email-unlock gate ----------
 function UnlockGate({ onUnlock }) {
     const [email, setEmail] = useState("");
     const [error, setError] = useState("");
@@ -97,8 +113,8 @@ function UnlockGate({ onUnlock }) {
                 <h2 className="gs-unlock__title">Unlock the full Golden Spot Finder</h2>
                 <p className="gs-unlock__sub">
                     Drop your work email to access the full-screen interactive
-                    map — solar heatmap, click-to-score, sustainability slider,
-                    and feasibility report. No spam, no resale.
+                    map — solar heatmap, click-to-score, place search, and
+                    sustainability slider. No spam, no resale.
                 </p>
                 <form className="gs-unlock__form" onSubmit={onSubmit}>
                     <input
@@ -118,8 +134,8 @@ function UnlockGate({ onUnlock }) {
                 <ul className="gs-unlock__perks">
                     <li>✓ Click anywhere to score (Solar + Infra − Pollution − Legal)</li>
                     <li>✓ Live SMHI Strång GHI heatmap</li>
+                    <li>✓ Place search & filter (Reserve, Bird, Coastal, N2000…)</li>
                     <li>✓ Sustainability slider: Nature ⇄ Economic priority</li>
-                    <li>✓ E-PRTR pollution registry overlay</li>
                 </ul>
             </div>
         </main>
