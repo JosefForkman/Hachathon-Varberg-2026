@@ -2,7 +2,7 @@ import GoldenSpotBrowser from "../GoldenSpotBrowser.jsx";
 
 export default function Hero({ onPremiumClick }) {
     return (
-        <section className="hero" id="explore">
+        <section className="hero">
             <div className="hero__inner">
                 <div className="hero__badge">
                     <span className="hero__badge-dot" />

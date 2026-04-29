@@ -3,7 +3,7 @@ import ShareButton from "../Sharebutton.jsx";
 
 export default function CTASection({ onDemoClick }) {
     return (
-        <section className="cta">
+        <section className="cta" id="explore">
             <h2 className="cta__title">Ready to explore?</h2>
             <p className="cta__sub">
                 Want to view the map in a bigger interface? Click{" "}
