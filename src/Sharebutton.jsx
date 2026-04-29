@@ -1,29 +1,35 @@
-const SHARE_URL =
-    typeof window !== "undefined"
-        ? window.location.origin
-        : "https://s-halland.app";
-const SHARE_TEXT =
-    "Just discovered S- Halland — a live map tracking the health of Halland's protected areas with biodiversity, climate, and ecosystem scores. Built on open data from Naturvårdsverket + SMHI. Worth a look if you care about conservation 🌿";
-
 export default function ShareButton() {
-    function onShare() {
-        const url = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(SHARE_URL)}&summary=${encodeURIComponent(SHARE_TEXT)}`;
-        window.open(url, "_blank", "noopener,noreferrer,width=600,height=600");
-    }
+    const SHARE_URL = "https://iconof.se";
+    const SHARE_TEXT =
+        "Just discovered S- Halland — a live map tracking the health of Halland's protected areas with biodiversity, climate, and ecosystem scores. Built on open data from Naturvårdsverket + SMHI. Worth a look if you care about conservation 🌿";
+
 
     return (
-        <button
-            className="btn btn--linkedin"
-            onClick={onShare}
-            aria-label="Share on LinkedIn">
+        <a
+            href={`https://www.linkedin.com/shareArticle?mini=1&url=${encodeURIComponent(SHARE_URL)}&title=Your%20App%20Title&summary=${encodeURIComponent(SHARE_TEXT)}`}
+            target="_blank"
+            style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "8px",
+                background: "#0077B5",
+                color: "white",
+                padding: "9px 18px",
+                borderRadius: "6px",
+                textDecoration: "none",
+                fontFamily: "sans-serif",
+                fontSize: "14px",
+                fontWeight: "500",
+            }}>
             <svg
-                className="btn__icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="15"
+                height="15"
                 viewBox="0 0 24 24"
-                fill="currentColor"
-                aria-hidden>
-                <path d="M20.45 20.45h-3.55v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.37V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45C23.21 24 24 23.23 24 22.28V1.72C24 .77 23.21 0 22.22 0z" />
+                fill="white">
+                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
             </svg>
             Share on LinkedIn
-        </button>
+        </a>
     );
 }
