@@ -133,7 +133,7 @@ export default function MapBrowser({ onPremiumClick }) {
                     <span className="browser__dot browser__dot--y" />
                     <span className="browser__dot browser__dot--g" />
                 </div>
-                <div className="browser__url">sweden-atlas.app/explore</div>
+                <div className="browser__url">s-halland.app/explore</div>
             </div>
             <div className="browser__body">
                 <ParksSidebar

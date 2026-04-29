@@ -62,8 +62,8 @@ export default function MapView({ features, selected, onSelect, loadError }) {
                 className="map__leaflet"
                 center={HALLAND_CENTER}
                 zoom={HALLAND_ZOOM}
-                scrollWheelZoom={false}
-                zoomControl={false}
+                scrollWheelZoom={true}
+                zoomControl={true}
                 attributionControl={true}>
                 <TileLayer
                     url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
