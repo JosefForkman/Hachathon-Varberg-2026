@@ -4,9 +4,9 @@
    ============================================================ */
 
 .gs-page {
-    max-width: 1400px;
+    max-width: 1600px;
     margin: 0 auto;
-    padding: 24px 24px 48px;
+    padding: 16px 16px 24px;
     color: var(--text-primary);
 }
 .gs-page__head {
@@ -34,8 +34,8 @@
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
     overflow: hidden;
-    height: 70vh;
-    min-height: 540px;
+    height: calc(100vh - 180px);
+    min-height: 640px;
 }
 .gs-page__error {
     margin-top: 12px;
@@ -462,7 +462,7 @@
 .gs-browser__body {
     display: grid;
     grid-template-columns: 1fr 320px;
-    height: 560px;          /* fixed pixel height — works inside MapBrowser */
+    height: 680px;          /* fixed pixel height */
     background: #0a1813;
     overflow: hidden;
 }
