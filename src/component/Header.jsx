@@ -4,7 +4,7 @@ export default function Header() {
     return (
         <header className="header">
             <div className="header__inner">
-                <a href="#" className="header__brand">
+                <a href="/" className="header__brand">
                     <img src="/logo.png" alt="" className="header__logo-img" />
                     <span>S-Halland</span>
                 </a>
