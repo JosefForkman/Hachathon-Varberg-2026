@@ -1,0 +1,37 @@
+# Prettier ignore file
+# Ignorera filer och mappar som inte behöver formateras av Prettier
+
+node_modules
+dist
+build
+coverage
+.cache
+public
+public/data
+/.vscode
+.idea
+.DS_Store
+
+# Minifierade eller binära filer
+*.min.js
+*.bundle.js
+*.map
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ico
+*.woff
+*.woff2
+*.ttf
+*.eot
+*.otf
+
+# Lockfiler (valfritt)
+yarn.lock
+package-lock.json
+pnpm-lock.yaml
+
+# Specifika datafiler som genereras eller kommer från externa källor
+public/data/*.geojson
