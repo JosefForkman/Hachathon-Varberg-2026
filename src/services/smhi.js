@@ -69,9 +69,11 @@ export async function fetchHallandForecast({
                 return cached.data;
             }
         }
-    } catch {}
+    } catch {
+        // Ignore cache errors
+    }
 
-    const url = `https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/${lon.toFixed(4)}/lat/${lat.toFixed(4)}/data.json`;
+    const url = `https://opendata-download-metfcst.smhi.se/api/category/snow1g/version/1/geotype/point/lon/${lon.toFixed(4)}/lat/${lat.toFixed(4)}/data.json`;
     const res = await fetch(url);
     if (!res.ok) throw new Error(`SMHI fetch failed: ${res.status}`);
     const json = await res.json();
@@ -93,7 +95,9 @@ export async function fetchHallandForecast({
             CACHE_KEY,
             JSON.stringify({ ts: Date.now(), data }),
         );
-    } catch {}
+    } catch (err) {
+        console.error("Failed to cache SMHI data:", err);
+    }
 
     return data;
 }

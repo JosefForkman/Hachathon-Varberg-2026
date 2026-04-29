@@ -78,12 +78,12 @@ export default function MapBrowser({ onPremiumClick }) {
                 return r.json();
             })
             .then((geo) => {
-                const feats = (geo.features || []).map((f, i) => {
-                    const props = f.properties || {};
-                    const c = centroidOf(f.geometry);
+                const feats = (geo.features || []).map((feature, index) => {
+                    const props = feature.properties || {};
+                    const centroidPoint = centroidOf(feature.geometry);
                     const cls = classifyType(readType(props));
                     return {
-                        id: props.OBJECTID || props.id || `f-${i}`,
+                        id: props.OBJECTID || props.id || `f-${index}`,
                         name: readName(props),
                         type: readType(props),
                         typeKey: cls.cssMod,
@@ -91,9 +91,9 @@ export default function MapBrowser({ onPremiumClick }) {
                         kommun: readKommun(props),
                         established: readEstablished(props),
                         area: readAreaKm2(props),
-                        centroid: c,
-                        geometry: f.geometry,
-                        raw: f,
+                        centroid: centroidPoint,
+                        geometry: feature.geometry,
+                        raw: feature,
                     };
                 });
                 setFeatures(feats);
