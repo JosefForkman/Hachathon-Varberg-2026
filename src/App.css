@@ -1,28 +1,28 @@
 * {
-  margin: 0;
-  padding: 0;
-  text-decoration: none;
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
 }
 body {
-  font-family: 'Inter Variable', sans-serif;
+    font-family: "Inter Variable", sans-serif;
 }
 header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background-color: #95D5B2;
-  padding: 1rem 2rem;
-
-  .logo {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 0.5rem;
+    background-color: #95d5b2;
+    padding: 1rem 2rem;
 
-    font-size: 1.5rem;
-    font-weight: bold;
-    
-    img {
-      height: 4.43rem;
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        font-size: 1.5rem;
+        font-weight: bold;
+
+        img {
+            height: 4.43rem;
+        }
     }
-  }
 }

@@ -1,75 +1,77 @@
 :root {
-  /* Background layers — Deep Forest Green */
-  --bg-deep: #0A1813;
-  --bg-surface: #112B22;
-  --bg-elevated: #1A3D30;
-  --bg-glass: rgba(17, 43, 34, 0.7);
-  --bg-glass-strong: rgba(10, 24, 19, 0.85);
+    /* Background layers — Deep Forest Green */
+    --bg-deep: #0a1813;
+    --bg-surface: #112b22;
+    --bg-elevated: #1a3d30;
+    --bg-glass: rgba(17, 43, 34, 0.7);
+    --bg-glass-strong: rgba(10, 24, 19, 0.85);
 
-  /* Accents */
-  --accent-primary: #4ADE80;
-  --accent-primary-hover: #22C55E;
-  --accent-secondary: #A7F3D0;
-  --accent-glow: rgba(74, 222, 128, 0.4);
+    /* Accents */
+    --accent-primary: #4ade80;
+    --accent-primary-hover: #22c55e;
+    --accent-secondary: #a7f3d0;
+    --accent-glow: rgba(74, 222, 128, 0.4);
 
-  /* Type marker accents */
-  --type-park: #4ADE80;
-  --type-reserve: #38BDF8;
-  --type-marine: #A78BFA;
-  --type-other: #FBBF24;
+    /* Type marker accents */
+    --type-park: #4ade80;
+    --type-reserve: #38bdf8;
+    --type-marine: #a78bfa;
+    --type-other: #fbbf24;
 
-  /* Score gradient */
-  --score-low: #EF4444;
-  --score-mid: #FBBF24;
-  --score-high: #4ADE80;
+    /* Score gradient */
+    --score-low: #ef4444;
+    --score-mid: #fbbf24;
+    --score-high: #4ade80;
 
-  /* LinkedIn brand */
-  --linkedin: #0A66C2;
-  --linkedin-hover: #0077B5;
+    /* LinkedIn brand */
+    --linkedin: #0a66c2;
+    --linkedin-hover: #0077b5;
 
-  /* Text */
-  --text-primary: #E6F1EA;
-  --text-secondary: #C2D4CA;
-  --text-muted: #8FA89B;
-  --text-subtle: #5C7368;
+    /* Text */
+    --text-primary: #e6f1ea;
+    --text-secondary: #c2d4ca;
+    --text-muted: #8fa89b;
+    --text-subtle: #5c7368;
 
-  /* Borders */
-  --border: rgba(255, 255, 255, 0.08);
-  --border-strong: rgba(255, 255, 255, 0.16);
-  --border-accent: rgba(74, 222, 128, 0.3);
+    /* Borders */
+    --border: rgba(255, 255, 255, 0.08);
+    --border-strong: rgba(255, 255, 255, 0.16);
+    --border-accent: rgba(74, 222, 128, 0.3);
 
-  /* Radii */
-  --radius-sm: 8px;
-  --radius-md: 14px;
-  --radius-lg: 20px;
-  --radius-xl: 28px;
-  --radius-pill: 999px;
+    /* Radii */
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 20px;
+    --radius-xl: 28px;
+    --radius-pill: 999px;
 
-  /* Spacing */
-  --space-1: 4px;
-  --space-2: 8px;
-  --space-3: 12px;
-  --space-4: 16px;
-  --space-5: 24px;
-  --space-6: 32px;
-  --space-7: 48px;
-  --space-8: 64px;
-  --space-9: 96px;
-  --space-10: 128px;
+    /* Spacing */
+    --space-1: 4px;
+    --space-2: 8px;
+    --space-3: 12px;
+    --space-4: 16px;
+    --space-5: 24px;
+    --space-6: 32px;
+    --space-7: 48px;
+    --space-8: 64px;
+    --space-9: 96px;
+    --space-10: 128px;
 
-  /* Type */
-  --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-display: 'Space Grotesk', 'Inter', sans-serif;
+    /* Type */
+    --font-sans:
+        "Inter", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: "Space Grotesk", "Inter", sans-serif;
 
-  /* Shadows */
-  --shadow-glow: 0 0 40px rgba(74, 222, 128, 0.25);
-  --shadow-glow-strong: 0 0 60px rgba(74, 222, 128, 0.5);
-  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
-  --shadow-modal: 0 20px 60px rgba(0, 0, 0, 0.6);
-  --shadow-browser: 0 30px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+    /* Shadows */
+    --shadow-glow: 0 0 40px rgba(74, 222, 128, 0.25);
+    --shadow-glow-strong: 0 0 60px rgba(74, 222, 128, 0.5);
+    --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.4);
+    --shadow-modal: 0 20px 60px rgba(0, 0, 0, 0.6);
+    --shadow-browser:
+        0 30px 80px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
 
-  /* Transitions */
-  --t-fast: 0.15s ease;
-  --t-base: 0.2s ease;
-  --t-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    /* Transitions */
+    --t-fast: 0.15s ease;
+    --t-base: 0.2s ease;
+    --t-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
