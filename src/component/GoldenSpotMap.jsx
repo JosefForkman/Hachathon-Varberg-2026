@@ -1,221 +1,263 @@
-import { bandColor } from "../services/goldenSpot.js";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+    MapContainer, TileLayer, GeoJSON, CircleMarker, Marker, Popup,
+    LayerGroup, useMap, useMapEvents,
+} from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
+import { evaluateGoldenSpot, bandColor } from "../services/goldenSpot.js";
+import { loadFacilities } from "../services/pollution.js";
+import { loadSolarGrid, ghiToHeatColor } from "../services/strang.js";
 
-function ScoreDonut({ score, band }) {
-    const safeScore = Math.max(0, Math.min(100, Math.round(score || 0)));
-    const C = 2 * Math.PI * 42;
-    const dash = (safeScore / 100) * C;
-    const colour = bandColor(band);
+const HALLAND_CENTER = [56.85, 12.85];
+const HALLAND_ZOOM = 9;
 
-    return (
-        <div className="gs-donut">
-            <svg viewBox="0 0 100 100" className="gs-donut__svg">
-                <circle cx="50" cy="50" r="42" className="gs-donut__track" fill="none" strokeWidth="8" />
-                <circle
-                    cx="50" cy="50" r="42" fill="none"
-                    stroke={colour}
-                    strokeWidth="8"
-                    strokeLinecap="round"
-                    strokeDasharray={`${dash} ${C - dash}`}
-                    transform="rotate(-90 50 50)"
-                    style={{ transition: "stroke-dasharray 400ms ease, stroke 400ms ease" }}
-                />
-                <text x="50" y="55" textAnchor="middle" fontSize="22" fontWeight="700" fill="var(--text-primary)">
-                    {safeScore}
-                </text>
-            </svg>
-            <div className="gs-donut__caption">Site Suitability</div>
-        </div>
-    );
+const goldIcon = new L.DivIcon({
+    className: "gs-pin",
+    html: '<div class="gs-pin__inner"></div>',
+    iconSize: [22, 22],
+    iconAnchor: [11, 11],
+});
+
+function FitToFeatures({ geojson }) {
+    const map = useMap();
+    const fitted = useRef(false);
+    useEffect(() => {
+        if (fitted.current || !geojson) return;
+        try {
+            const layer = L.geoJSON(geojson);
+            const b = layer.getBounds();
+            if (b.isValid()) {
+                map.fitBounds(b, { padding: [30, 30] });
+                fitted.current = true;
+            }
+        } catch { /* ignore */ }
+    }, [geojson, map]);
+    return null;
 }
 
-function MetricBar({ label, score, value, danger }) {
-    const v = Math.max(0, Math.min(100, Math.round(score || 0)));
-    return (
-        <div className="gs-bar">
-            <div className="gs-bar__head">
-                <span className="gs-bar__label">{label}</span>
-                <span className="gs-bar__value">{value}</span>
-            </div>
-            <div className="gs-bar__track">
-                <div className={`gs-bar__fill ${danger ? "gs-bar__fill--danger" : ""}`} style={{ width: `${v}%` }} />
-            </div>
-        </div>
-    );
+function ClickEvaluator({ protectedAreas, onResult, onLoading }) {
+    useMapEvents({
+        click: async (e) => {
+            const { lat, lng } = e.latlng;
+            onLoading({ lat, lon: lng });
+            try {
+                const result = await evaluateGoldenSpot(lat, lng, protectedAreas);
+                onResult({ lat, lon: lng, result });
+            } catch (err) {
+                console.error("[GoldenSpotMap] evaluate failed:", err);
+                onResult({
+                    lat, lon: lng,
+                    result: {
+                        forbidden: false, score: 0, band: "low",
+                        breakdown: null,
+                        reasons: ["Evaluation failed — check the dev console."],
+                        raw: null,
+                    },
+                });
+            }
+        },
+    });
+    return null;
 }
 
-function LegalRiskBar({ band, distance }) {
-    const colour = band === "high" ? "#ef4444" : band === "medium" ? "#fbbf24" : "#4ade80";
-    const fillPct = band === "high" ? 90 : band === "medium" ? 55 : 20;
-    return (
-        <div className="gs-bar">
-            <div className="gs-bar__head">
-                <span className="gs-bar__label">Legal risk</span>
-                <span className="gs-bar__value" style={{ color: colour }}>
-                    {band ? band.charAt(0).toUpperCase() + band.slice(1) : "—"}
-                </span>
-            </div>
-            <div className="gs-bar__track">
-                <div className="gs-bar__fill" style={{ width: `${fillPct}%`, background: colour }} />
-            </div>
-            <div className="gs-bar__sub">Nearest reserve: {distance}</div>
-        </div>
-    );
-}
-
-function PrioritySlider({ priority, onChange, weights }) {
-    return (
-        <div className="gs-slider">
-            <div className="gs-slider__head">
-                <span className="gs-slider__label-l">🌿 Nature</span>
-                <span className="gs-slider__label-r">Economic 💼</span>
-            </div>
-            <input
-                type="range"
-                min="0"
-                max="100"
-                step="1"
-                value={priority}
-                onChange={(e) => onChange(Number(e.target.value))}
-                className="gs-slider__input"
-            />
-            <div className="gs-slider__weights">
-                <span title="Solar weight">☀️ {(weights.solar * 100).toFixed(0)}%</span>
-                <span title="Infrastructure weight">🛣️ {(weights.infra * 100).toFixed(0)}%</span>
-                <span title="Pollution weight">🏭 {(weights.pollution * 100).toFixed(0)}%</span>
-                <span title="Legal risk weight">⚖️ {(weights.legalRisk * 100).toFixed(0)}%</span>
-            </div>
-        </div>
-    );
-}
-
-function Empty() {
-    return (
-        <aside className="gs-side gs-side--empty">
-            <div className="gs-side__hero">
-                <div className="gs-side__hero-title">Golden Spot Finder</div>
-                <p className="gs-side__hero-sub">
-                    Click anywhere on the map to score that location for solar +
-                    industrial development. Sites inside protected (red) areas
-                    are auto-flagged as Forbidden.
-                </p>
-                <ul className="gs-side__legend">
-                    <li><span className="gs-side__dot gs-side__dot--high" /> 75+ Golden</li>
-                    <li><span className="gs-side__dot gs-side__dot--mid" /> 55-74 Promising</li>
-                    <li><span className="gs-side__dot gs-side__dot--low" /> Below 55 Marginal</li>
-                    <li><span className="gs-side__dot gs-side__dot--forbidden" /> Forbidden</li>
-                </ul>
-            </div>
-        </aside>
-    );
-}
-
-function Loading({ coord }) {
-    return (
-        <aside className="gs-side gs-side--loading">
-            <div className="gs-spinner" />
-            <div className="gs-side__loading-title">Scoring location…</div>
-            {coord && (
-                <div className="gs-side__loading-sub">
-                    {coord.lat.toFixed(4)}, {coord.lon.toFixed(4)}
-                </div>
-            )}
-            <div className="gs-side__loading-list">
-                <div>Checking conservation overlap…</div>
-                <div>Pulling SMHI Strång GHI…</div>
-                <div>Querying OSM road network…</div>
-                <div>Scanning E-PRTR registry…</div>
-            </div>
-        </aside>
-    );
-}
-
-export default function GoldenSpotSidebar({
-    selectedSpot, priority, onPriorityChange, onDownloadReport,
+export default function GoldenSpotMap({
+    protectedAreas, selectedSpot, onSpotEvaluated, onSpotLoading,
 }) {
-    if (!selectedSpot) return <Empty />;
-    if (!selectedSpot.result) return <Loading coord={selectedSpot} />;
+    const [facilities, setFacilities] = useState([]);
+    const [solarGrid, setSolarGrid] = useState([]);
+    const [showSolar, setShowSolar] = useState(true);
+    const [showProtected, setShowProtected] = useState(true);
+    const [showPolluters, setShowPolluters] = useState(true);
 
-    const { result, lat, lon } = selectedSpot;
+    useEffect(() => { loadFacilities().then(setFacilities); }, []);
+    useEffect(() => { loadSolarGrid().then(setSolarGrid); }, []);
 
-    if (result.forbidden) {
-        return (
-            <aside className="gs-side gs-side--forbidden">
-                <div className="gs-side__forbidden-icon">🚫</div>
-                <div className="gs-side__forbidden-title">Forbidden Site</div>
-                <div className="gs-side__forbidden-sub">Inside a Naturreservat / NVR polygon</div>
-                <div className="gs-side__forbidden-name">{result.blockedBy?.name}</div>
-                <ul className="gs-side__reasons">
-                    {result.reasons.map((r, i) => (
-                        <li key={i} dangerouslySetInnerHTML={{ __html: mdLite(r) }} />
-                    ))}
-                </ul>
-                <div className="gs-side__coord">{lat.toFixed(4)}, {lon.toFixed(4)}</div>
-            </aside>
-        );
-    }
+    const protectedStyle = useMemo(() => ({
+        color: "#ef4444",
+        weight: 1.4,
+        opacity: 0.9,
+        fillColor: "#ef4444",
+        fillOpacity: 0.18,
+    }), []);
 
-    const b = result.breakdown;
-    const w = result.weights || { solar: 0.25, infra: 0.25, pollution: 0.25, legalRisk: 0.25 };
+    // Calibrate the heat scale to *this* grid's range so colour variation
+    // is visible even when the spread is tight (e.g. 250-267 W/m²).
+    const heatRange = useMemo(() => {
+        if (!solarGrid.length) return { min: 245, max: 270 };
+        const ghis = solarGrid.map((p) => p.ghi);
+        return { min: Math.min(...ghis), max: Math.max(...ghis) };
+    }, [solarGrid]);
 
     return (
-        <aside className="gs-side">
-            <ScoreDonut score={result.score} band={result.band} />
-            <div className="gs-side__coord">{lat.toFixed(4)}, {lon.toFixed(4)}</div>
+        <div className="gs-map">
+            <MapContainer
+                className="gs-map__leaflet"
+                center={HALLAND_CENTER}
+                zoom={HALLAND_ZOOM}
+                scrollWheelZoom={true}
+                zoomControl={true}
+                attributionControl={true}>
+                <TileLayer
+                    url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+                    attribution='&copy; <a href="https://carto.com/attributions">CARTO</a> &copy; OSM'
+                    subdomains="abcd"
+                    maxZoom={19}
+                />
 
-            <h4 className="gs-side__h">Sustainability priority</h4>
-            <PrioritySlider
-                priority={priority}
-                onChange={onPriorityChange}
-                weights={w}
-            />
+                {/* Solar heatmap layer — large translucent circles */}
+                {showSolar && (
+                    <LayerGroup>
+                        {solarGrid.map((p, i) => (
+                            <CircleMarker
+                                key={`sol-${i}`}
+                                center={[p.lat, p.lon]}
+                                radius={28}
+                                pathOptions={{
+                                    color: ghiToHeatColor(p.ghi, heatRange.min, heatRange.max),
+                                    fillColor: ghiToHeatColor(p.ghi, heatRange.min, heatRange.max),
+                                    fillOpacity: 0.32,
+                                    opacity: 0.55,
+                                    weight: 1,
+                                    interactive: true,
+                                }}>
+                                <Popup>
+                                    <strong>Solar potential</strong>
+                                    <br />
+                                    GHI {p.ghi.toFixed(1)} W/m²
+                                    <br />
+                                    <small>≈ {Math.round(p.ghi * 24 * 365 / 1000)} kWh/m²/yr</small>
+                                </Popup>
+                            </CircleMarker>
+                        ))}
+                    </LayerGroup>
+                )}
 
-            <h4 className="gs-side__h">Score breakdown</h4>
-            <MetricBar
-                label="Solar potential"
-                score={b.solar.score}
-                value={b.solar.label}
-            />
-            <MetricBar
-                label="Infrastructure access"
-                score={b.infra.score}
-                value={b.infra.label}
-            />
-            <MetricBar
-                label="Pollution proximity"
-                score={b.pollution.score}
-                value={b.pollution.label}
-                danger
-            />
-            <LegalRiskBar
-                band={b.legalRisk.band}
-                distance={
-                    Number.isFinite(b.legalRisk.value)
-                        ? (b.legalRisk.value >= 1000
-                            ? (b.legalRisk.value / 1000).toFixed(1) + " km"
-                            : Math.round(b.legalRisk.value) + " m")
-                        : "—"
-                }
-            />
+                {/* Protected areas (red) */}
+                {showProtected && protectedAreas && (
+                    <>
+                        <GeoJSON
+                            data={protectedAreas}
+                            style={protectedStyle}
+                            onEachFeature={(feature, layer) => {
+                                const p = feature.properties || {};
+                                const name = p.NAMN || p.namn || p.NAME || "Protected area";
+                                layer.bindTooltip("🚫 " + name, { sticky: true });
+                            }}
+                        />
+                        <FitToFeatures geojson={protectedAreas} />
+                    </>
+                )}
 
-            <h4 className="gs-side__h">Why is this a Golden Spot?</h4>
-            <ul className="gs-side__reasons">
-                {result.reasons.map((r, i) => (
-                    <li key={i} dangerouslySetInnerHTML={{ __html: mdLite(r) }} />
+                {/* E-PRTR polluters (orange) */}
+                {showPolluters && facilities.map((f, i) => (
+                    <CircleMarker
+                        key={`f-${i}`}
+                        center={[f.lat, f.lon]}
+                        radius={5}
+                        pathOptions={{
+                            color: "#fb923c",
+                            fillColor: "#fb923c",
+                            fillOpacity: 0.7,
+                            weight: 1,
+                        }}>
+                        <Popup>
+                            <strong>{f.name || "Facility"}</strong>
+                            <br />
+                            <small>{f.activity || "industry"}</small>
+                            <br />
+                            <small>
+                                {f.city}{f.country ? ", " + f.country : ""}
+                            </small>
+                            {f.pollutants && f.pollutants.length > 0 && (
+                                <>
+                                    <br />
+                                    <small style={{ opacity: 0.8 }}>
+                                        Releases: {f.pollutants.slice(0, 3).join(", ")}
+                                        {f.pollutants.length > 3 ? "…" : ""}
+                                    </small>
+                                </>
+                            )}
+                        </Popup>
+                    </CircleMarker>
                 ))}
-            </ul>
 
-            <button className="gs-side__cta" onClick={() => onDownloadReport(selectedSpot)}>
-                📥 Download Site Prospectus
-            </button>
-            <div className="gs-side__cta-sub">PDF · GeoJSON · CSV — emailed to you.</div>
-        </aside>
+                <ClickEvaluator
+                    protectedAreas={protectedAreas}
+                    onResult={onSpotEvaluated}
+                    onLoading={onSpotLoading}
+                />
+
+                {selectedSpot?.lat != null && (
+                    <Marker position={[selectedSpot.lat, selectedSpot.lon]} icon={goldIcon}>
+                        <Popup>
+                            {selectedSpot.result?.forbidden ? (
+                                <strong style={{ color: "#ef4444" }}>🚫 Forbidden site</strong>
+                            ) : (
+                                <>
+                                    <strong>
+                                        Suitability:{" "}
+                                        <span style={{ color: bandColor(selectedSpot.result?.band) }}>
+                                            {selectedSpot.result?.score ?? "…"}
+                                        </span>
+                                    </strong>
+                                    <br />
+                                    <small>
+                                        {selectedSpot.lat.toFixed(4)}, {selectedSpot.lon.toFixed(4)}
+                                    </small>
+                                </>
+                            )}
+                        </Popup>
+                    </Marker>
+                )}
+            </MapContainer>
+
+            {/* Layer toggle + legend */}
+            <div className="gs-map__legend">
+                <div className="gs-map__legend-title">Layers</div>
+                <label className="gs-map__legend-row">
+                    <input
+                        type="checkbox"
+                        checked={showSolar}
+                        onChange={(e) => setShowSolar(e.target.checked)}
+                    />
+                    <span className="gs-map__swatch gs-map__swatch--solar" />
+                    Solar GHI
+                </label>
+                <label className="gs-map__legend-row">
+                    <input
+                        type="checkbox"
+                        checked={showProtected}
+                        onChange={(e) => setShowProtected(e.target.checked)}
+                    />
+                    <span className="gs-map__swatch gs-map__swatch--protected" />
+                    Protected (No-Go)
+                </label>
+                <label className="gs-map__legend-row">
+                    <input
+                        type="checkbox"
+                        checked={showPolluters}
+                        onChange={(e) => setShowPolluters(e.target.checked)}
+                    />
+                    <span className="gs-map__swatch gs-map__swatch--pollution" />
+                    E-PRTR polluter
+                </label>
+                <div className="gs-map__legend-row">
+                    <span className="gs-map__swatch gs-map__swatch--gold" />
+                    Your evaluated spot
+                </div>
+                {showSolar && solarGrid.length > 0 && (
+                    <div className="gs-map__solar-scale">
+                        <div className="gs-map__solar-bar" />
+                        <div className="gs-map__solar-ticks">
+                            <span>{Math.round(heatRange.min)}</span>
+                            <span>{Math.round((heatRange.min + heatRange.max) / 2)}</span>
+                            <span>{Math.round(heatRange.max)} W/m²</span>
+                        </div>
+                    </div>
+                )}
+                <div className="gs-map__legend-hint">Click anywhere to evaluate.</div>
+            </div>
+        </div>
     );
-}
-
-function mdLite(s) {
-    const safe = String(s)
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
-    return safe.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
 }
